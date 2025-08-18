@@ -4,10 +4,13 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Check from '@mui/icons-material/Check';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
 
 function Profiles() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -20,16 +23,21 @@ function Profiles() {
     };
     return (
         <Box>
-            <Button
-                id="basic-button-profiles"
-                aria-controls={open ? 'basic-menu-profiles' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                sx={{ padding: 0 }}
-            >
-                <Avatar sx={{ width: 30, height: 30 }}>L</Avatar>
-            </Button>
+            <Tooltip title="Account settings">
+                <IconButton
+                    onClick={handleClick}
+                    size="small"
+                    sx={{ padding: 0 }}
+                    aria-controls={open ? 'basic-menu-profiles' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                >
+                    <Avatar
+                        src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f6f14aefe7d3504ad9037940e83653d3~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=96226477&x-expires=1755666000&x-signature=sIzEZQd6R2eazqa4UoAi612jK%2BY%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2"
+                        sx={{ width: 30, height: 30 }}
+                    ></Avatar>
+                </IconButton>
+            </Tooltip>
             <Menu
                 id="basic-menu-profiles"
                 anchorEl={anchorEl}
@@ -40,30 +48,29 @@ function Profiles() {
                 }}
             >
                 <MenuItem>
-                    <ListItemText inset>Single</ListItemText>
+                    <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
                 </MenuItem>
                 <MenuItem>
-                    <ListItemText inset>1.15</ListItemText>
+                    <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> My account
                 </MenuItem>
+                <Divider />
                 <MenuItem>
-                    <ListItemText inset>Double</ListItemText>
+                    <ListItemIcon>
+                        <PersonAdd fontSize="small" />
+                    </ListItemIcon>
+                    Add another account
                 </MenuItem>
                 <MenuItem>
                     <ListItemIcon>
-                        <Check />
+                        <Settings fontSize="small" />
                     </ListItemIcon>
-                    Custom: 1.2
-                </MenuItem>
-                <Divider />
-                <MenuItem>
-                    <ListItemText>Add space before paragraph</ListItemText>
+                    Settings
                 </MenuItem>
                 <MenuItem>
-                    <ListItemText>Add space after paragraph</ListItemText>
-                </MenuItem>
-                <Divider />
-                <MenuItem>
-                    <ListItemText>Custom spacing...</ListItemText>
+                    <ListItemIcon>
+                        <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
                 </MenuItem>
             </Menu>
         </Box>
