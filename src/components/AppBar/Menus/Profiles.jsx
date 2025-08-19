@@ -34,7 +34,7 @@ function Profiles() {
                 >
                     <Avatar
                         src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/f6f14aefe7d3504ad9037940e83653d3~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=96226477&x-expires=1755666000&x-signature=sIzEZQd6R2eazqa4UoAi612jK%2BY%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=my2"
-                        sx={{ width: 30, height: 30 }}
+                        sx={{ width: 34, height: 34 }}
                     ></Avatar>
                 </IconButton>
             </Tooltip>
