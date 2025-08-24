@@ -29,7 +29,7 @@ function BoardBar() {
         <Box
             sx={{
                 width: '100%',
-                height: (theme) => theme.trelloCustom.boardBarHeight,
+                height: (theme) => theme.trello.boardBarHeight,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -70,6 +70,9 @@ function BoardBar() {
                             height: 34,
                             fontSize: 16,
                             border: 'none',
+                            color: 'white',
+                            cursor: 'pointer',
+                            '&:first-of-type': { bgcolor: '#a4b0be' },
                         },
                     }}
                 >
