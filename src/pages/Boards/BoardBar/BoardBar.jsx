@@ -10,6 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { capitalizeFirstLetter } from '~/utils/formatter';
 
 const MENU_STYLES = {
     color: 'white',
@@ -24,7 +25,8 @@ const MENU_STYLES = {
         bgcolor: 'primary.50',
     },
 };
-function BoardBar() {
+
+function BoardBar({ board }) {
     return (
         <Box
             sx={{
@@ -40,8 +42,8 @@ function BoardBar() {
             }}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Chip sx={MENU_STYLES} icon={<DashboardIcon />} label="LuVa Trello App" clickable />
-                <Chip sx={MENU_STYLES} icon={<VpnLockIcon />} label="Public/Private Workspace" clickable />
+                <Chip sx={MENU_STYLES} icon={<DashboardIcon />} label={board?.title} clickable />
+                <Chip sx={MENU_STYLES} icon={<VpnLockIcon />} label={capitalizeFirstLetter(board?.type)} clickable />
                 <Chip sx={MENU_STYLES} icon={<AddToDriveIcon />} label="Add To Google Drive" clickable />
                 <Chip sx={MENU_STYLES} icon={<BoltIcon />} label="Automation" clickable />
                 <Chip sx={MENU_STYLES} icon={<FilterListIcon />} label="Filters" clickable />
