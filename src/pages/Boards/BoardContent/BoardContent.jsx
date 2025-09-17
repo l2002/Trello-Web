@@ -250,6 +250,8 @@ function BoardContent({ board }) {
 
             // Tim cac diem gia nhau, va cham - intersections vs con tro
             const pointerIntersections = pointerWithin(args);
+            // console.log(pointerIntersections);
+            if (!pointerIntersections?.length) return;
 
             // Thuat toan phat hien va cham se tra ve mot mang cac va cham o day
             const intersections = !!pointerIntersections?.length ? pointerIntersections : rectIntersection(args);
