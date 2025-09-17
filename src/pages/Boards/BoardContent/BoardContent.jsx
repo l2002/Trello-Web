@@ -19,7 +19,8 @@ import {
 import { arrayMove } from '@dnd-kit/sortable';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
+import { generatePlaceholderCard } from '~/utils/formatter';
 
 import Column from './ListComlumns/Column/Column';
 import Card from './ListComlumns/Column/ListCards/Card/Card';
@@ -83,6 +84,12 @@ function BoardContent({ board }) {
             if (nextActiveColumn) {
                 nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => card._id !== activeDragingCardId);
 
+                // Them Placeholder Card neu Column rong
+                if (isEmpty(nextActiveColumn.cards)) {
+                    nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)];
+                }
+
+                // Cap nhat lai mang cardOrderIds cho chuan du lieu
                 nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map((card) => card._id);
             }
             if (nextOverColumn) {
@@ -94,6 +101,9 @@ function BoardContent({ board }) {
                     columnId: nextOverColumn._id,
                 };
                 nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData);
+
+                // Xoa Placeholder Card neu dang ton tai
+                nextOverColumn.cards = nextOverColumn.cards.filter((card) => !card.FE_PlaceholderCard);
 
                 nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id);
             }
