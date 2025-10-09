@@ -11,19 +11,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import theme from '~/theme';
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
     const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
     const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm);
 
     const [newColumnTitle, setNewColumnTitle] = useState('');
 
-    const addNewColumn = () => {
+    const addNewColumn = async () => {
         if (!newColumnTitle) {
             toast.error('Please enter column title');
             return;
         }
-        // console.log(newColumnTitle);
-        // Call API
+
+        // Tạo dữ liệu column để gọi API
+        const newColumnData = {
+            title: newColumnTitle,
+        };
+
+        await createNewColumn(newColumnData);
 
         // Dong trang thai them Column moi & Clear Input
         toggleOpenNewColumnForm();
@@ -43,7 +48,7 @@ function ListColumns({ columns }) {
                 }}
             >
                 {columns?.map((column) => (
-                    <Column key={column._id} column={column} />
+                    <Column key={column._id} column={column} createNewCard={createNewCard} />
                 ))}
 
                 {/* Box Add new column CTA */}

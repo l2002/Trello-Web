@@ -27,7 +27,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import theme from '~/theme';
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
     // Keo tha
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: column._id,
@@ -59,13 +59,19 @@ function Column({ column }) {
 
     const [newCardTitle, setNewCardTitle] = useState('');
 
-    const addNewCard = () => {
+    const addNewCard = async () => {
         if (!newCardTitle) {
             toast.error('Please enter Card title', { position: 'bottom-right' });
             return;
         }
-        // console.log(newCardTitle);
-        // Call API
+
+        // Tạo dữ liệu card để gọi API
+        const newCardData = {
+            title: newCardTitle,
+            columnId: column._id,
+        };
+
+        await createNewCard(newCardData);
 
         // Dong trang thai them Card moi & Clear Input
         toggleOpenNewCardForm();
