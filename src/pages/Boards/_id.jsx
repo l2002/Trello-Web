@@ -4,7 +4,7 @@ import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 import { mockData } from '~/apis/mock-data';
 import { useEffect, useState } from 'react';
-import { createNewColumnAPI, createNewCardAPI, fetchBoardDetailsAPI } from '~/apis';
+import { createNewColumnAPI, createNewCardAPI, fetchBoardDetailsAPI, updateBoardDetailsAPI } from '~/apis';
 import { isEmpty } from 'lodash';
 import { generatePlaceholderCard } from '~/utils/formatter';
 
@@ -60,11 +60,28 @@ function Board() {
         setBoard(newBoard);
     };
 
+    const moveColumns = async (dndOrderedColumns) => {
+        // Update cho chuan du lieu state board
+        const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+        const newBoard = { ...board };
+        newBoard.columns = dndOrderedColumns;
+        newBoard.columnOrderIds = dndOrderedColumnsIds;
+        setBoard(newBoard);
+
+        // Call API update board
+        await updateBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds });
+    };
+
     return (
         <Container disableGutters maxWidth sx={{ height: '100vh' }}>
             <AppBar />
             <BoardBar board={board} />
-            <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard} />
+            <BoardContent
+                board={board}
+                createNewColumn={createNewColumn}
+                createNewCard={createNewCard}
+                moveColumns={moveColumns}
+            />
         </Container>
     );
 }

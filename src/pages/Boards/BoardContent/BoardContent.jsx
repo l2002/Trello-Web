@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
 };
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
     // Yeu cau chuot di chuyen 10px thi moi goi event, fix truong hop click bi goi event
     const mouserSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } });
 
@@ -237,8 +237,11 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
                 // Lay vi tri moi (tu thang active)
                 const newColumnIndex = oderedColumns.findIndex((c) => c._id === over.id);
 
-                const dndOderedColumns = arrayMove(oderedColumns, oldColumnIndex, newColumnIndex);
-                setOderedColumns(dndOderedColumns);
+                const dndOrderedColumns = arrayMove(oderedColumns, oldColumnIndex, newColumnIndex);
+
+                moveColumns(dndOrderedColumns);
+
+                setOderedColumns(dndOrderedColumns);
             }
         }
 
