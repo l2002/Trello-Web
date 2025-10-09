@@ -5,6 +5,8 @@ import BoardContent from './BoardContent/BoardContent';
 import { mockData } from '~/apis/mock-data';
 import { useEffect, useState } from 'react';
 import { createNewColumnAPI, createNewCardAPI, fetchBoardDetailsAPI } from '~/apis';
+import { isEmpty } from 'lodash';
+import { generatePlaceholderCard } from '~/utils/formatter';
 
 function Board() {
     const [board, setBoard] = useState(null);
@@ -13,6 +15,13 @@ function Board() {
         const boardId = '68de177d7983423e3a65654e';
         // call API
         fetchBoardDetailsAPI(boardId).then((board) => {
+            // Khi refresh web Cần xử lý kéo thả vào một column rỗng
+            board.columns.forEach((column) => {
+                if (isEmpty(column.cards)) {
+                    column.cards = [generatePlaceholderCard(column)];
+                    column.cardOrderIds = [generatePlaceholderCard(column)._id];
+                }
+            });
             setBoard(board);
         });
     }, []);
@@ -23,6 +32,10 @@ function Board() {
             ...newColumnData,
             boardId: board._id,
         });
+
+        // Khi tạo column mới thì sẽ chưa có card, cần xử lý vấn đề kéo thả vào một column rỗng
+        createdColumn.cards = [generatePlaceholderCard(createdColumn)];
+        createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id];
 
         // Update state board
         const newBoard = { ...board };
