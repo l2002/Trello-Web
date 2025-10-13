@@ -59,7 +59,7 @@ function Column({ column, createNewCard }) {
 
     const [newCardTitle, setNewCardTitle] = useState('');
 
-    const addNewCard = async () => {
+    const addNewCard = () => {
         if (!newCardTitle) {
             toast.error('Please enter Card title', { position: 'bottom-right' });
             return;
@@ -71,7 +71,7 @@ function Column({ column, createNewCard }) {
             columnId: column._id,
         };
 
-        await createNewCard(newCardData);
+        createNewCard(newCardData);
 
         // Dong trang thai them Card moi & Clear Input
         toggleOpenNewCardForm();

@@ -4,7 +4,13 @@ import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 import { mockData } from '~/apis/mock-data';
 import { useEffect, useState } from 'react';
-import { createNewColumnAPI, createNewCardAPI, fetchBoardDetailsAPI, updateBoardDetailsAPI } from '~/apis';
+import {
+    createNewColumnAPI,
+    createNewCardAPI,
+    fetchBoardDetailsAPI,
+    updateBoardDetailsAPI,
+    updateColumnDetailsAPI,
+} from '~/apis';
 import { isEmpty } from 'lodash';
 import { generatePlaceholderCard } from '~/utils/formatter';
 
@@ -60,7 +66,9 @@ function Board() {
         setBoard(newBoard);
     };
 
-    const moveColumns = async (dndOrderedColumns) => {
+    // Gọi API và xử lý khi kéo thả Column xong xuôi
+    // Chỉ cần gọi API để cập nhật mảng columnOrderIds của Board chứa nó (thay đổi vị trí trong board)
+    const moveColumns = (dndOrderedColumns) => {
         // Update cho chuan du lieu state board
         const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
         const newBoard = { ...board };
@@ -69,7 +77,23 @@ function Board() {
         setBoard(newBoard);
 
         // Call API update board
-        await updateBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds });
+        updateBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds });
+    };
+
+    // Khi di chuyển card trong cùng Column:
+    // Chỉ cần gọi API để cập nhật mảng cardOrderIds của Column chứa nó (thay đổi vị trí trong mảng)
+    const moveCardOnTheSameColumn = (dndOderedCards, dndOderedCardIds, columnId) => {
+        // Update cho chuan du lieu state board
+        const newBoard = { ...board };
+        const columnToUpdate = newBoard.columns.find((column) => column._id === columnId);
+        if (columnToUpdate) {
+            columnToUpdate.cards = dndOderedCards;
+            columnToUpdate.cardOrderIds = dndOderedCardIds;
+        }
+        setBoard(newBoard);
+
+        // Call API update Column
+        updateColumnDetailsAPI(columnId, { cardOrderIds: dndOderedCardIds });
     };
 
     return (
@@ -81,6 +105,7 @@ function Board() {
                 createNewColumn={createNewColumn}
                 createNewCard={createNewCard}
                 moveColumns={moveColumns}
+                moveCardOnTheSameColumn={moveCardOnTheSameColumn}
             />
         </Container>
     );

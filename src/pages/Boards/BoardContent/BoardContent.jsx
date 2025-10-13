@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
 };
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardOnTheSameColumn }) {
     // Yeu cau chuot di chuyen 10px thi moi goi event, fix truong hop click bi goi event
     const mouserSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } });
 
@@ -205,6 +205,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
                     activeDragingCardData,
                 );
             } else {
+                // Hanh dong keo tha card trong cung mot column
                 console.log('Hanh dong keo tha card trong cung mot column');
 
                 // Lay vi tri cu (tu thang oldColumnWhenDraggingCard)
@@ -213,6 +214,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
                 const newCardIndex = overColumn?.cards?.findIndex((c) => c._id === overCardId);
 
                 const dndOderedCards = arrayMove(oldColumnWhenDraggingCard?.cards, oldCardIndex, newCardIndex);
+                const dndOderedCardIds = dndOderedCards.map((card) => card._id);
 
                 setOderedColumns((prevColumns) => {
                     // Clone mảng OrderedColumnsState cũ ra một cái mới để xử lý data rồi return - cập nhật lại OrderedColumnsState mới
@@ -223,9 +225,11 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
                     // Cap nhat lai 2 gtri moi la card va cardOrderIds trong targetColumn
                     targetColumn.cards = dndOderedCards;
-                    targetColumn.cardOrderIds = dndOderedCards.map((card) => card._id);
+                    targetColumn.cardOrderIds = dndOderedCardIds;
                     return nextColumns;
                 });
+
+                moveCardOnTheSameColumn(dndOderedCards, dndOderedCardIds, oldColumnWhenDraggingCard._id);
             }
         }
 
@@ -239,9 +243,8 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
 
                 const dndOrderedColumns = arrayMove(oderedColumns, oldColumnIndex, newColumnIndex);
 
-                moveColumns(dndOrderedColumns);
-
                 setOderedColumns(dndOrderedColumns);
+                moveColumns(dndOrderedColumns);
             }
         }
 
