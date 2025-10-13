@@ -52,7 +52,7 @@ function Column({ column, createNewCard }) {
     };
 
     // Sorts
-    const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id');
+    const orderedCards = column.cards;
 
     const [openNewCardForm, setOpenNewCardForm] = useState(false);
     const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);

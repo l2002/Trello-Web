@@ -2,6 +2,7 @@ import Container from '@mui/material/Container';
 import AppBar from '../../components/AppBar/AppBar';
 import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
+import Box from '@mui/material/Box';
 import { mockData } from '~/apis/mock-data';
 import { useEffect, useState } from 'react';
 import {
@@ -13,21 +14,31 @@ import {
 } from '~/apis';
 import { isEmpty } from 'lodash';
 import { generatePlaceholderCard } from '~/utils/formatter';
+import { mapOrder } from '~/utils/sorts';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Typography } from '@mui/material';
 
 function Board() {
     const [board, setBoard] = useState(null);
 
     useEffect(() => {
-        const boardId = '68de177d7983423e3a65654e';
+        const boardId = '68eca01cc8723242beedb2e8';
         // call API
         fetchBoardDetailsAPI(boardId).then((board) => {
-            // Khi refresh web Cần xử lý kéo thả vào một column rỗng
+            // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con
+            board.columns = mapOrder(board.columns, board.columnOrderIds, '_id');
+
             board.columns.forEach((column) => {
+                // Khi refresh web Cần xử lý kéo thả vào một column rỗng
                 if (isEmpty(column.cards)) {
                     column.cards = [generatePlaceholderCard(column)];
                     column.cardOrderIds = [generatePlaceholderCard(column)._id];
+                } else {
+                    // Sắp xếp thứ tự các cards luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con
+                    column.cards = mapOrder(column.cards, column?.cardOrderIds, '_id');
                 }
             });
+            console.log(board);
             setBoard(board);
         });
     }, []);
@@ -93,8 +104,26 @@ function Board() {
         setBoard(newBoard);
 
         // Call API update Column
-        updateColumnDetailsAPI(columnId, { cardOrderIds: dndOderedCardIds });
+        // updateColumnDetailsAPI(columnId, { cardOrderIds: dndOderedCardIds });
     };
+
+    if (!board) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 2,
+                    width: '100vw',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+                <Typography>Loading Board...</Typography>
+            </Box>
+        );
+    }
 
     return (
         <Container disableGutters maxWidth sx={{ height: '100vh' }}>

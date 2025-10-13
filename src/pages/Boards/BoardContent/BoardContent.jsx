@@ -54,7 +54,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
     const lastOverId = useRef(null);
 
     useEffect(() => {
-        setOderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'));
+        setOderedColumns(board.columns);
     }, [board]);
 
     // Funct chung xu ly viec Cap nhat lai state trong truong hop di chuyen Card giua cac Column khac nhau
