@@ -11,6 +11,7 @@ import {
     fetchBoardDetailsAPI,
     updateBoardDetailsAPI,
     updateColumnDetailsAPI,
+    moveCardToDifferentColumnAPI,
 } from '~/apis';
 import { isEmpty } from 'lodash';
 import { generatePlaceholderCard } from '~/utils/formatter';
@@ -104,7 +105,25 @@ function Board() {
         setBoard(newBoard);
 
         // Call API update Column
-        // updateColumnDetailsAPI(columnId, { cardOrderIds: dndOderedCardIds });
+        updateColumnDetailsAPI(columnId, { cardOrderIds: dndOderedCardIds });
+    };
+
+    const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+        // Update cho chuan du lieu state board
+        const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+        const newBoard = { ...board };
+        newBoard.columns = dndOrderedColumns;
+        newBoard.columnOrderIds = dndOrderedColumnsIds;
+        setBoard(newBoard);
+
+        // Call API xu ly BE
+        moveCardToDifferentColumnAPI({
+            currentCardId,
+            prevColumnId,
+            prevCardOrderIds: dndOrderedColumns.find((c) => c._id === prevColumnId)?.cardOrderIds,
+            nextColumnId,
+            nextCardOrderIds: dndOrderedColumns.find((c) => c._id === nextColumnId)?.cardOrderIds,
+        });
     };
 
     if (!board) {
@@ -135,6 +154,7 @@ function Board() {
                 createNewCard={createNewCard}
                 moveColumns={moveColumns}
                 moveCardOnTheSameColumn={moveCardOnTheSameColumn}
+                moveCardToDifferentColumn={moveCardToDifferentColumn}
             />
         </Container>
     );

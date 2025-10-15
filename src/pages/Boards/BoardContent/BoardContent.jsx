@@ -31,7 +31,14 @@ const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
     CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
 };
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardOnTheSameColumn }) {
+function BoardContent({
+    board,
+    createNewColumn,
+    createNewCard,
+    moveColumns,
+    moveCardOnTheSameColumn,
+    moveCardToDifferentColumn,
+}) {
     // Yeu cau chuot di chuyen 10px thi moi goi event, fix truong hop click bi goi event
     const mouserSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } });
 
@@ -66,6 +73,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
         activeColumn,
         activeDragingCardId,
         activeDragingCardData,
+        trigerFrom,
     ) => {
         setOderedColumns((prevColumns) => {
             // Tìm vị trí(index) của overCard trong Column đích (nơi ma activeCard sắp được thả)
@@ -110,6 +118,15 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
                 nextOverColumn.cardOrderIds = nextOverColumn.cards.map((card) => card._id);
             }
 
+            // Nếu function này được gọi từ hangDleDragEnd nghĩa là đã kéo thả xong, lúc này mới xử lý gọi API 1 lần ở dây
+            if (trigerFrom == 'handleDragEnd') {
+                moveCardToDifferentColumn(
+                    activeDragingCardId,
+                    oldColumnWhenDraggingCard._id,
+                    nextOverColumn._id,
+                    nextColumns,
+                );
+            }
             return nextColumns;
         });
     };
@@ -166,6 +183,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
                 activeColumn,
                 activeDragingCardId,
                 activeDragingCardData,
+                'handleDragOver',
             );
         }
     };
@@ -203,6 +221,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
                     activeColumn,
                     activeDragingCardId,
                     activeDragingCardData,
+                    'handleDragEnd',
                 );
             } else {
                 // Hanh dong keo tha card trong cung mot column
