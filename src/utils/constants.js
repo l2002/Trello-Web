@@ -1,2 +1,11 @@
-export const API_ROOT = 'https://trello-api-544t.onrender.com/';
-// export const API_ROOT = 'http://localhost:3000/';
+let apiRoot = '';
+
+if (process.env.BUILD_MODE === 'dev') {
+    apiRoot = 'http://localhost:3000/';
+}
+if (process.env.BUILD_MODE === 'production') {
+    apiRoot = 'https://trello-api-544t.onrender.com/';
+}
+console.log('🚀 ~ apiRoot:', apiRoot);
+
+export const API_ROOT = apiRoot;
